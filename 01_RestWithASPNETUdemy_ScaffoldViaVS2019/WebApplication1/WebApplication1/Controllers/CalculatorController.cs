@@ -30,6 +30,8 @@ namespace WebApplication1.Controllers
             return BadRequest("Invalid Input");
         }
 
+
+
         private decimal ConvertToDecimal(string strNumber)
         {
             decimal decimalValue;
