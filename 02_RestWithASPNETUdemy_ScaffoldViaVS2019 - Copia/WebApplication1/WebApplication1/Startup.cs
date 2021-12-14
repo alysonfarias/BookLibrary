@@ -33,7 +33,10 @@ namespace WebApplication1
 
             var connection = Configuration["MySQLConnection:MySQLConnectionString"];
             services.AddDbContext<MySQLContext>(options => options.UseMySql(connection));
-            
+
+            // Versioning API
+            services.AddApiVersioning();
+
             // Dependency injection
             services.AddScoped<IPersonService, PersonServiceImplementation>(); 
 
