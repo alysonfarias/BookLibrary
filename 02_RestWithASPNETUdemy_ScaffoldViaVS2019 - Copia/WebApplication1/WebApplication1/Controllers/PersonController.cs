@@ -1,7 +1,8 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
+using WebApplication1.Business;
+using WebApplication1.Business.Implementations;
 using WebApplication1.Model;
-using WebApplication1.Services.Implementations;
 
 namespace WebApplication1.Controllers
 {
@@ -12,29 +13,29 @@ namespace WebApplication1.Controllers
     {
 
         private readonly ILogger<PersonController> _logger;
-        private IPersonService _personService;
+        private IPersonBusiness _personBusiness;
 
-        public PersonController(ILogger<PersonController> logger, IPersonService personService)
+        public PersonController(ILogger<PersonController> logger, IPersonBusiness personBusiness)
         {
             _logger = logger;
-            _personService = personService;
+            _personBusiness = personBusiness;
         }
 
         [HttpGet]
         public IActionResult Get()
         {
-            return Ok(_personService.FindAll());
+            return Ok(_personBusiness.FindAll());
         }
 
         [HttpGet("{id}")]
         public IActionResult Get(long id)
         {
-            var person = _personService.FindById(id);
+            var person = _personBusiness.FindById(id);
             if(person == null)
             {
                 return NotFound();
             }
-            return Ok(_personService.FindById(id));
+            return Ok(_personBusiness.FindById(id));
         }
 
         [HttpPost]
@@ -44,7 +45,7 @@ namespace WebApplication1.Controllers
             {
                 return BadRequest();
             }
-            return Ok(_personService.Create(person));
+            return Ok(_personBusiness.Create(person));
         }
 
         [HttpPut]
@@ -54,13 +55,13 @@ namespace WebApplication1.Controllers
             {
                 return BadRequest();
             }
-            return Ok(_personService.Update(person));
+            return Ok(_personBusiness.Update(person));
         }
 
         [HttpDelete("{id}")]
         public IActionResult Delete(long id)
         {
-            _personService.Delete(id);
+            _personBusiness.Delete(id);
             return NoContent();
         }
 

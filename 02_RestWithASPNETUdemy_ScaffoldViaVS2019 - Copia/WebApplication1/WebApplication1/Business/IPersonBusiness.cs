@@ -1,9 +1,9 @@
 ﻿using System.Collections.Generic;
 using WebApplication1.Model;
 
-namespace WebApplication1.Services.Implementations
+namespace WebApplication1.Business
 {
-    public interface IPersonService
+    public interface IPersonBusiness
     {
         Person Create(Person person);
         Person Update(Person person);

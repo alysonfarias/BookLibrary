@@ -3,15 +3,17 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
+using WebApplication1.Business.Implementations;
 using WebApplication1.Model;
 using WebApplication1.Model.Context;
+using WebApplication1.Repository;
 
-namespace WebApplication1.Services.Implementations
+namespace WebApplication1.Repository.Implementations
 {
-    public class PersonServiceImplementation : IPersonService
+    public class PersonRepositoryImplementation : IPersonRepository
     {
         private MySQLContext _context;
-        public PersonServiceImplementation(MySQLContext context)
+        public PersonRepositoryImplementation(MySQLContext context)
         {
             _context = context;
         }
@@ -88,9 +90,11 @@ namespace WebApplication1.Services.Implementations
         }
 
         // Method responsible for check if a person exists from an Id
-        private bool Exists(long id)
+        public bool Exists(long id)
         {
             return _context.People.Any(p => p.Id.Equals(id));
         }
+
+
     }
 }

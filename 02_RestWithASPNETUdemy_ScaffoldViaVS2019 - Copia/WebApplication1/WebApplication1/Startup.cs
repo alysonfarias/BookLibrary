@@ -1,18 +1,14 @@
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
-using Microsoft.AspNetCore.HttpsPolicy;
-using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
-using Microsoft.Extensions.Logging;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
+using WebApplication1.Business;
+using WebApplication1.Business.Implementations;
 using WebApplication1.Model.Context;
-using WebApplication1.Services.Implementations;
+using WebApplication1.Repository;
+using WebApplication1.Repository.Implementations;
 
 namespace WebApplication1
 {
@@ -38,7 +34,9 @@ namespace WebApplication1
             services.AddApiVersioning();
 
             // Dependency injection
-            services.AddScoped<IPersonService, PersonServiceImplementation>(); 
+
+            services.AddScoped<IPersonBusiness, PersonBusinessImplementation>();
+            services.AddScoped<IPersonRepository, PersonRepositoryImplementation>();
 
         }
 
