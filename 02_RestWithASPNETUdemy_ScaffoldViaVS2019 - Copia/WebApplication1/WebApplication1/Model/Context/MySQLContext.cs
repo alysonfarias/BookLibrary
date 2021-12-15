@@ -13,5 +13,6 @@ namespace WebApplication1.Model.Context
         }
 
         public DbSet<Person> People { get; set; }
+        public DbSet<Book> Books { get; set; }
     }
 }
