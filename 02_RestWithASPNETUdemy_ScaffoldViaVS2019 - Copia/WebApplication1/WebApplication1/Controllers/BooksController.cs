@@ -1,4 +1,5 @@
 ﻿using Microsoft.AspNetCore.Mvc;
+using Microsoft.Extensions.Logging;
 using WebApplication1.Business;
 using WebApplication1.Model;
 
@@ -8,18 +9,15 @@ namespace WebApplication1.Controllers
     [Route("api/[controller]/v{version:apiVersion}")]
     public class BooksController : Controller
     {
-        //Declaração do serviço usado
+        private readonly ILogger<BooksController> _logger;
         private IBookBusiness _bookBusiness;
 
-        /* Injeção de uma instancia de IBookBusiness ao criar
-        uma instancia de BookController */
-        public BooksController(IBookBusiness bookBusiness)
+        public BooksController(ILogger<BooksController> logger,IBookBusiness bookBusiness)
         {
+            _logger = logger;
             _bookBusiness = bookBusiness;
         }
 
-        //Mapeia as requisições GET para http://localhost:{porta}/api/books/v1/
-        //Get sem parâmetros para o FindAll --> Busca Todos
         [HttpGet]
         public IActionResult Get()
         {
@@ -46,26 +44,27 @@ namespace WebApplication1.Controllers
             return new ObjectResult(_bookBusiness.Create(book));
         }
 
-        //Mapeia as requisições PUT para http://localhost:{porta}/api/books/v1/
-        //O [FromBody] consome o Objeto JSON enviado no corpo da requisição
+ 
+
+
         [HttpPut]
         public IActionResult Put([FromBody] Book book)
         {
-            if (book == null) return BadRequest();
-            var updatedBook = _bookBusiness.Update(book);
-            if (updatedBook == null) return BadRequest();
-            return new ObjectResult(updatedBook);
+            if (book == null)
+            {
+                return BadRequest();
+            }
+            return Ok(_bookBusiness.Update(book));
         }
 
-
-        //Mapeia as requisições DELETE para http://localhost:{porta}/api/books/v1/{id}
-        //recebendo um ID como no Path da requisição
         [HttpDelete("{id}")]
-        public IActionResult Delete(int id)
+        public IActionResult Delete(long id)
         {
             _bookBusiness.Delete(id);
             return NoContent();
         }
+
+
     }
 }
 

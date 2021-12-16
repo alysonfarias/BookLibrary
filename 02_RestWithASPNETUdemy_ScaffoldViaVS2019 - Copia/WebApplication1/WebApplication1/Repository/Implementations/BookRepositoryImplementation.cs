@@ -43,13 +43,13 @@ namespace WebApplication1.Repository.Implementations
         // Method responsible for delete a person from an Id
         public void Delete(long id)
         {
-            var result = _context.People.SingleOrDefault(p => p.Id.Equals(id));
+            var result = _context.Books.SingleOrDefault(p => p.Id.Equals(id));
 
             if (result != null)
             {
                 try
                 {
-                    _context.People.Remove(result);
+                    _context.Books.Remove(result);
                     _context.SaveChanges();
                 }
                 catch (Exception)
@@ -67,7 +67,7 @@ namespace WebApplication1.Repository.Implementations
         {
             if (!Exists(book.Id)) return null;
 
-            var result = _context.People.SingleOrDefault(p => p.Id.Equals(book.Id));
+            var result = _context.Books.SingleOrDefault(p => p.Id.Equals(book.Id));
             if (result != null)
             {
                 try
@@ -88,7 +88,7 @@ namespace WebApplication1.Repository.Implementations
         // Method responsible for check if a person exists from an Id
         public bool Exists(long id)
         {
-            return _context.People.Any(p => p.Id.Equals(id));
+            return _context.Books.Any(p => p.Id.Equals(id));
         }
     }
 }

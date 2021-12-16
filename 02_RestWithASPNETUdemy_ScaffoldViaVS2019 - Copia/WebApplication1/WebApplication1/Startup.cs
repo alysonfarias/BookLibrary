@@ -18,8 +18,6 @@ namespace WebApplication1
     {
         public IWebHostEnvironment Environment { get; }
         public IConfiguration Configuration { get; }
-
-
         public Startup(IConfiguration configuration, IWebHostEnvironment environment)
         {
             Configuration = configuration;
