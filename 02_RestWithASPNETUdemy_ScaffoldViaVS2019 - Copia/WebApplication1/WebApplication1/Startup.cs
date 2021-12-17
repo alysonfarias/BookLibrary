@@ -9,8 +9,7 @@ using System.Collections.Generic;
 using WebApplication1.Business;
 using WebApplication1.Business.Implementations;
 using WebApplication1.Model.Context;
-using WebApplication1.Repository;
-using WebApplication1.Repository.Implementations;
+using WebApplication1.Repository.Generic;
 
 namespace WebApplication1
 {
@@ -28,7 +27,6 @@ namespace WebApplication1
                 .CreateLogger();
 
         }
-
 
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
@@ -49,9 +47,10 @@ namespace WebApplication1
             // Dependency injection
 
             services.AddScoped<IPersonBusiness, PersonBusinessImplementation>();
-            services.AddScoped<IPersonRepository, PersonRepositoryImplementation>(); services.AddScoped<IPersonBusiness, PersonBusinessImplementation>();
+            //services.AddScoped<IPersonRepository, PersonRepositoryImplementation>(); services.AddScoped<IPersonBusiness, PersonBusinessImplementation>();
             services.AddScoped<IBookBusiness, BookBusinessImplementation>();
-            services.AddScoped<IBookRepository, BookRepositoryImplementation>();
+            //services.AddScoped<IBookRepository, BookRepositoryImplementation>();
+            services.AddScoped(typeof(IRepository<>), typeof(GenericRepository<>));
         }
 
 

@@ -3,14 +3,13 @@ using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations.Schema;
 using System.Linq;
 using System.Threading.Tasks;
+using WebApplication1.Model.Base;
 
 namespace WebApplication1.Model
 {   
     [Table("books")]
-    public class Book
+    public class Book : BaseEntity
     {
-        [Column("id")]
-        public long Id { get; set; }
 
         [Column("author")]
         public string Author { get; set; }

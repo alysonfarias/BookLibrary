@@ -1,13 +1,14 @@
 ﻿using System.Collections.Generic;
 using WebApplication1.Model;
 using WebApplication1.Repository;
+using WebApplication1.Repository.Generic;
 
 namespace WebApplication1.Business.Implementations
 {
     public class PersonBusinessImplementation : IPersonBusiness
     {
-        private readonly IPersonRepository _repository;
-        public PersonBusinessImplementation(IPersonRepository repository)
+        private readonly IRepository<Person>  _repository;
+        public PersonBusinessImplementation(IRepository<Person> repository)
         {
             _repository = repository;
         }

@@ -24,9 +24,6 @@ namespace WebApplication1.Controllers
             return Ok(_bookBusiness.FindAll());
         }
 
-        //Mapeia as requisições GET para http://localhost:{porta}/api/books/v1/{id}
-        //recebendo um ID como no Path da requisição
-        //Get com parâmetros para o FindById --> Busca Por ID
         [HttpGet("{id}")]
         public IActionResult Get(long id)
         {
@@ -35,17 +32,12 @@ namespace WebApplication1.Controllers
             return Ok(book);
         }
 
-        //Mapeia as requisições POST para http://localhost:{porta}/api/books/v1/
-        //O [FromBody] consome o Objeto JSON enviado no corpo da requisição
         [HttpPost]
         public IActionResult Post([FromBody] Book book)
         {
             if (book == null) return BadRequest();
             return new ObjectResult(_bookBusiness.Create(book));
         }
-
- 
-
 
         [HttpPut]
         public IActionResult Put([FromBody] Book book)
