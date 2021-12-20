@@ -5,11 +5,10 @@ namespace WebApplication1.Business
 {
     public interface IBookBusiness
     {
-        Book Create(Book book);
-        Book Update(Book book);
-        Book FindById(long id);
+        BookVO Create(BookVO book);
+        BookVO Update(BookVO book);
+        BookVO FindById(long id);
         void Delete(long id);
-
-        List<Book> FindAll();
+        List<BookVO> FindAll();
     }
 }

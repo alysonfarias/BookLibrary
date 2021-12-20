@@ -2,6 +2,7 @@
 using Microsoft.Extensions.Logging;
 using WebApplication1.Business;
 using WebApplication1.Business.Implementations;
+using WebApplication1.Data.VO;
 using WebApplication1.Model;
 
 namespace WebApplication1.Controllers
@@ -39,7 +40,7 @@ namespace WebApplication1.Controllers
         }
 
         [HttpPost]
-        public IActionResult Post([FromBody] Person person)
+        public IActionResult Post([FromBody] PersonVO person)
         {
             if (person == null)
             {
@@ -49,7 +50,7 @@ namespace WebApplication1.Controllers
         }
 
         [HttpPut]
-        public IActionResult Put([FromBody] Person person)
+        public IActionResult Put([FromBody] PersonVO person)
         {
             if (person == null)
             {
@@ -64,9 +65,6 @@ namespace WebApplication1.Controllers
             _personBusiness.Delete(id);
             return NoContent();
         }
-
-
-
         private decimal ConvertToDecimal(string strNumber)
         {
             decimal decimalValue;
