@@ -1,9 +1,8 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 using WebApplication1.Business;
-using WebApplication1.Business.Implementations;
 using WebApplication1.Data.VO;
-using WebApplication1.Model;
+using WebApplication1.Hypermedia.Filters;
 
 namespace WebApplication1.Controllers
 {
@@ -23,12 +22,14 @@ namespace WebApplication1.Controllers
         }
 
         [HttpGet]
+        [TypeFilter(typeof(HyperMediaFilter))]
         public IActionResult Get()
         {
             return Ok(_personBusiness.FindAll());
         }
 
         [HttpGet("{id}")]
+        [TypeFilter(typeof(HyperMediaFilter))]
         public IActionResult Get(long id)
         {
             var person = _personBusiness.FindById(id);
@@ -40,6 +41,7 @@ namespace WebApplication1.Controllers
         }
 
         [HttpPost]
+        [TypeFilter(typeof(HyperMediaFilter))]
         public IActionResult Post([FromBody] PersonVO person)
         {
             if (person == null)
@@ -50,6 +52,7 @@ namespace WebApplication1.Controllers
         }
 
         [HttpPut]
+        [TypeFilter(typeof(HyperMediaFilter))]
         public IActionResult Put([FromBody] PersonVO person)
         {
             if (person == null)

@@ -9,6 +9,8 @@ using Serilog;
 using System.Collections.Generic;
 using WebApplication1.Business;
 using WebApplication1.Business.Implementations;
+using WebApplication1.Hypermedia.Enricher;
+using WebApplication1.Hypermedia.Filters;
 using WebApplication1.Model.Context;
 using WebApplication1.Repository.Generic;
 
@@ -42,16 +44,6 @@ namespace WebApplication1
             {
                 MigrateDatabase(connection);
             }
-            // Versioning API
-            services.AddApiVersioning();
-
-            // Dependency injection
-
-            services.AddScoped<IPersonBusiness, PersonBusinessImplementation>();
-            //services.AddScoped<IPersonRepository, PersonRepositoryImplementation>(); services.AddScoped<IPersonBusiness, PersonBusinessImplementation>();
-            services.AddScoped<IBookBusiness, BookBusinessImplementation>();
-            //services.AddScoped<IBookRepository, BookRepositoryImplementation>();
-            services.AddScoped(typeof(IRepository<>), typeof(GenericRepository<>));
 
 
             services.AddMvc(options =>
@@ -60,7 +52,30 @@ namespace WebApplication1
                 options.FormatterMappings.SetMediaTypeMappingForFormat("xml", MediaTypeHeaderValue.Parse("application/xml"));
                 options.FormatterMappings.SetMediaTypeMappingForFormat("json", MediaTypeHeaderValue.Parse("application/json"));
             }).AddXmlSerializerFormatters();
-                ;
+
+
+
+            var filterOptions = new HyperMediaFilterOptions();
+            // HATEOS
+            filterOptions.ContentResponseEnricherList.Add(new PersonEnricher());
+            filterOptions.ContentResponseEnricherList.Add(new BookEnricher());
+            services.AddApiVersioning();
+
+            services.AddScoped<IPersonBusiness, PersonBusinessImplementation>();
+            services.AddScoped<IBookBusiness, BookBusinessImplementation>();
+
+
+            services.AddSingleton(filterOptions);
+            // Versioning API
+
+            // Dependency injection
+
+            //services.AddScoped<IPersonRepository, PersonRepositoryImplementation>(); services.AddScoped<IPersonBusiness, PersonBusinessImplementation>();
+            //services.AddScoped<IBookRepository, BookRepositoryImplementation>();
+            services.AddScoped(typeof(IRepository<>), typeof(GenericRepository<>));
+
+
+
         }
 
 
@@ -82,6 +97,7 @@ namespace WebApplication1
             app.UseEndpoints(endpoints =>
             {
                 endpoints.MapControllers();
+                endpoints.MapControllerRoute("DefaultApi", "{controller=values}/{id?}");
             });
         }
 
