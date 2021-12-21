@@ -36,6 +36,13 @@ namespace WebApplication1
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
+            services.AddCors(options => options.AddDefaultPolicy(builder =>
+            {
+                builder.AllowAnyOrigin()
+                .AllowAnyMethod()
+                .AllowAnyHeader();
+            }
+            ));
 
             services.AddControllers();
 
@@ -111,11 +118,13 @@ namespace WebApplication1
 
             app.UseRouting();
 
-            app.UseSwagger(); // GERAR JSON with Documentation
+            app.UseCors();
+
+            app.UseSwagger(); // generate JSON with Documentation
             app.UseSwaggerUI(c =>
             {
                 c.SwaggerEndpoint("/swagger/v1/swagger.json",
-"REST           API's from 0 to Azure with ASP.NET core 5 and Docker - v1");
+                "REST API's from 0 to Azure with ASP.NET core 5 and Docker - v1");
             }); // generate html page
 
             var option = new RewriteOptions();
