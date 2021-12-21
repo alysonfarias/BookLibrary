@@ -1,10 +1,12 @@
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
+using Microsoft.AspNetCore.Rewrite;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Net.Http.Headers;
+using Microsoft.OpenApi.Models;
 using Serilog;
 using System.Collections.Generic;
 using WebApplication1.Business;
@@ -59,7 +61,24 @@ namespace WebApplication1
             // HATEOS
             filterOptions.ContentResponseEnricherList.Add(new PersonEnricher());
             filterOptions.ContentResponseEnricherList.Add(new BookEnricher());
+
+            //API Versioning
             services.AddApiVersioning();
+
+            services.AddSwaggerGen(c => 
+            {
+                c.SwaggerDoc("v1", new OpenApiInfo
+                { 
+                    Title = "Rest API's from 0 to Azure with ASP.NET Core 5 and Docker",
+                    Version = "v1",
+                    Description = "API RESTfull developed in course 'Rest API's from 0 to Azure with ASP.NET Core 5 and Docker'",
+                    Contact = new OpenApiContact
+                    {
+                        Name = "Alyson Farias",
+                        Url = new System.Uri("https://alysonfarias.github.io")
+                    }
+                });
+            });
 
             services.AddScoped<IPersonBusiness, PersonBusinessImplementation>();
             services.AddScoped<IBookBusiness, BookBusinessImplementation>();
@@ -92,6 +111,17 @@ namespace WebApplication1
 
             app.UseRouting();
 
+            app.UseSwagger(); // GERAR JSON with Documentation
+            app.UseSwaggerUI(c =>
+            {
+                c.SwaggerEndpoint("/swagger/v1/swagger.json",
+"REST           API's from 0 to Azure with ASP.NET core 5 and Docker - v1");
+            }); // generate html page
+
+            var option = new RewriteOptions();
+            option.AddRedirect("^$", "swagger");
+            app.UseRewriter(option);
+
             app.UseAuthorization();
 
             app.UseEndpoints(endpoints =>
@@ -99,6 +129,7 @@ namespace WebApplication1
                 endpoints.MapControllers();
                 endpoints.MapControllerRoute("DefaultApi", "{controller=values}/{id?}");
             });
+
         }
 
         private void MigrateDatabase(string connection)
