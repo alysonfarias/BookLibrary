@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 using System.Collections.Generic;
 using WebApplication1.Business;
@@ -9,7 +10,8 @@ namespace WebApplication1.Controllers
 {
     [ApiVersion("1")]
     [ApiController]
-    [Route("api/[controller]/v{version:apiVersion}")]
+    [Authorize("Bearer")]
+    [Route("api/[controller]/v{version:ApiVersion}")]
     public class PersonController : ControllerBase
     {
 

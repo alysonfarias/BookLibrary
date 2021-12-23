@@ -11,7 +11,7 @@ using WebApplication1.Services;
 
 namespace WebApplication1.Business.Implementations
 {
-    public class LoginBusinessImplementation : ILoginBusiness
+    public class UserBusinessImplementation : ILoginBusiness
     {
         private const string DATE_FORMAT = "yyyy-MM-dd HH:mm:ss";
         private TokenConfiguration _configuration;
@@ -19,7 +19,7 @@ namespace WebApplication1.Business.Implementations
         private IUserRepository _repository;
         private readonly ITokenService _tokenService;
 
-        public LoginBusinessImplementation(TokenConfiguration configuration, IUserRepository repository, ITokenService tokenService)
+        public UserBusinessImplementation(TokenConfiguration configuration, IUserRepository repository, ITokenService tokenService)
         {
             _configuration = configuration;
             _repository = repository;
@@ -42,8 +42,12 @@ namespace WebApplication1.Business.Implementations
             user.RefreshToken = refreshToken;
             user.RefreshTokenExpiryTime = DateTime.Now.AddDays(_configuration.DaysToExpiry);
 
+            _repository.RefreshUserInfo(user);
+
+
             DateTime createDate = DateTime.Now;
             DateTime expirationDate = createDate.AddMinutes(_configuration.Minutes);
+
             return new TokenVO(
                 true,
                 createDate.ToString(DATE_FORMAT),

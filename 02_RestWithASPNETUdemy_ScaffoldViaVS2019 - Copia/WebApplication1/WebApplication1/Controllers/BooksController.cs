@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 using System.Collections.Generic;
 using WebApplication1.Business;
@@ -8,7 +9,9 @@ using WebApplication1.Model;
 namespace WebApplication1.Controllers
 {
     [ApiVersion("1")]
-    [Route("api/[controller]/v{version:apiVersion}")]
+    [ApiController]
+    [Authorize("Bearer")]
+    [Route("api/[controller]/v{version:ApiVersion}")]
     public class BooksController : Controller
     {
         private readonly ILogger<BooksController> _logger;

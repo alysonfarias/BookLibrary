@@ -1,3 +1,5 @@
+using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Rewrite;
@@ -5,16 +7,23 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
+using Microsoft.Extensions.Options;
+using Microsoft.IdentityModel.Tokens;
 using Microsoft.Net.Http.Headers;
 using Microsoft.OpenApi.Models;
 using Serilog;
 using System.Collections.Generic;
+using System.Text;
 using WebApplication1.Business;
 using WebApplication1.Business.Implementations;
+using WebApplication1.Configurations;
 using WebApplication1.Hypermedia.Enricher;
 using WebApplication1.Hypermedia.Filters;
 using WebApplication1.Model.Context;
+using WebApplication1.Repository;
 using WebApplication1.Repository.Generic;
+using WebApplication1.Services;
+using WebApplication1.Services.Implementations;
 
 namespace WebApplication1
 {
@@ -36,6 +45,42 @@ namespace WebApplication1
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
+            var tokenConfigurations = new TokenConfiguration();
+
+            new ConfigureFromConfigurationOptions<TokenConfiguration>(
+                Configuration.GetSection("TokenConfigurations")
+            ).Configure(tokenConfigurations);
+
+            services.AddSingleton(tokenConfigurations);
+
+            services.AddAuthentication(
+                options =>
+                {
+                    options.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
+                    options.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
+
+                }).AddJwtBearer(options =>
+                {
+                    options.TokenValidationParameters = new TokenValidationParameters
+                    {
+                        ValidateIssuer = true,
+                        ValidateAudience = true,
+                        ValidateLifetime = true,
+                        ValidateIssuerSigningKey = true,
+                        ValidIssuer = tokenConfigurations.Issuer,
+                        ValidAudience = tokenConfigurations.Audience,
+                        IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(tokenConfigurations.Secret))
+                    };
+                });
+
+            services.AddAuthorization(auth =>
+            {
+                auth.AddPolicy("Bearer", new AuthorizationPolicyBuilder()
+                    .AddAuthenticationSchemes(JwtBearerDefaults.AuthenticationScheme)
+                    .RequireAuthenticatedUser().Build());
+            });
+
+
             services.AddCors(options => options.AddDefaultPolicy(builder =>
             {
                 builder.AllowAnyOrigin()
@@ -70,7 +115,6 @@ namespace WebApplication1
             filterOptions.ContentResponseEnricherList.Add(new BookEnricher());
 
             //API Versioning
-            services.AddApiVersioning();
 
             services.AddSwaggerGen(c => 
             {
@@ -86,20 +130,26 @@ namespace WebApplication1
                     }
                 });
             });
+            // Versioning API
+            services.AddApiVersioning();
+            
+            services.AddSingleton(filterOptions);
+
+            // Dependency injection
 
             services.AddScoped<IPersonBusiness, PersonBusinessImplementation>();
             services.AddScoped<IBookBusiness, BookBusinessImplementation>();
+            services.AddScoped<ILoginBusiness, UserBusinessImplementation>();
 
+            
+            services.AddTransient<ITokenService, TokenService>();
 
-            services.AddSingleton(filterOptions);
-            // Versioning API
+            services.AddScoped<IUserRepository, UserRepository>();
 
-            // Dependency injection
 
             //services.AddScoped<IPersonRepository, PersonRepositoryImplementation>(); services.AddScoped<IPersonBusiness, PersonBusinessImplementation>();
             //services.AddScoped<IBookRepository, BookRepositoryImplementation>();
             services.AddScoped(typeof(IRepository<>), typeof(GenericRepository<>));
-
 
 
         }
