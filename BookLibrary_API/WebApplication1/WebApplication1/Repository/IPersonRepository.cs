@@ -1,15 +1,10 @@
-﻿using System.Collections.Generic;
-using WebApplication1.Model;
+﻿using WebApplication1.Model;
+using WebApplication1.Repository.Generic;
 
 namespace WebApplication1.Repository
 {
-    public interface IPersonRepository
+    public interface IPersonRepository : IRepository<Person>
     {
-        Person Create(Person person);
-        Person Update(Person person);
-        Person FindById(long id);
-        void Delete(long id);
-        List<Person> FindAll();
-        bool Exists(long id);
+        Person Disable(long id);
     }
 }

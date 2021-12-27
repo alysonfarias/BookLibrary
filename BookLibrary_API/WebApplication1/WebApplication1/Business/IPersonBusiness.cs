@@ -9,6 +9,8 @@ namespace WebApplication1.Business
         PersonVO Update(PersonVO person);
         PersonVO FindById(long id);
         void Delete(long id);
+        PersonVO Disable(long id);
+
         List<PersonVO> FindAll();
     }
 }

@@ -145,6 +145,7 @@ namespace WebApplication1
             services.AddTransient<ITokenService, TokenService>();
 
             services.AddScoped<IUserRepository, UserRepository>();
+            services.AddScoped<IPersonRepository, PersonRepository>();
 
 
             //services.AddScoped<IPersonRepository, PersonRepositoryImplementation>(); services.AddScoped<IPersonBusiness, PersonBusinessImplementation>();
