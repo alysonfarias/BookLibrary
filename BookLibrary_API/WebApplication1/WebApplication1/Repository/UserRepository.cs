@@ -20,7 +20,21 @@ namespace WebApplication1.Repository
         public User ValidateCredentials(UserVO user)
         {
             var pass = ComputeHash(user.Password, new SHA256CryptoServiceProvider());
-            return _context.Users.FirstOrDefault(u => (u.UserName == user.UserName) && (u.PassWord == pass));
+            return _context.Users.FirstOrDefault(u => (u.UserName == user.UserName) && (u.Password == pass));
+        }
+
+        public User ValidateCredentials(string userName)
+        {
+            return _context.Users.SingleOrDefault(u => (u.UserName == userName));
+        }
+
+        public bool RevokeToken(string userName)
+        {
+            var user = _context.Users.SingleOrDefault(u => (u.UserName == userName));
+            if (user == null) return false;
+            user.RefreshToken = null;
+            _context.SaveChanges();
+            return true;
         }
 
         public User RefreshUserInfo(User user)
@@ -51,5 +65,6 @@ namespace WebApplication1.Repository
             Byte[] hashedBytes = algorithm.ComputeHash(inputBytes);
             return BitConverter.ToString(hashedBytes);
         }
+
     }
 }

@@ -108,18 +108,22 @@ namespace WebApplication1
             }).AddXmlSerializerFormatters();
 
 
-
-            var filterOptions = new HyperMediaFilterOptions();
             // HATEOS
+            var filterOptions = new HyperMediaFilterOptions();
             filterOptions.ContentResponseEnricherList.Add(new PersonEnricher());
             filterOptions.ContentResponseEnricherList.Add(new BookEnricher());
 
-            //API Versioning
 
-            services.AddSwaggerGen(c => 
+            services.AddSingleton(filterOptions);
+
+            // Versioning API
+            
+            services.AddApiVersioning();
+
+            services.AddSwaggerGen(c =>
             {
                 c.SwaggerDoc("v1", new OpenApiInfo
-                { 
+                {
                     Title = "Rest API's from 0 to Azure with ASP.NET Core 5 and Docker",
                     Version = "v1",
                     Description = "API RESTfull developed in course 'Rest API's from 0 to Azure with ASP.NET Core 5 and Docker'",
@@ -130,10 +134,6 @@ namespace WebApplication1
                     }
                 });
             });
-            // Versioning API
-            services.AddApiVersioning();
-            
-            services.AddSingleton(filterOptions);
 
             // Dependency injection
 

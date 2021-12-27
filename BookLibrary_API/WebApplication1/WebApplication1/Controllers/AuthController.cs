@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Http;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using System;
 using System.Collections.Generic;
@@ -33,6 +34,28 @@ namespace WebApplication1.Controllers
             
             return Ok(token);
         
+        }
+
+        [HttpPost]
+        [Route("refresh")]
+        public IActionResult Refresh ([FromBody] TokenVO tokenVo)
+        {
+            if (tokenVo is null) return BadRequest("Invalid client request");
+            var token = _loginBusiness.ValidateCredentials(tokenVo);
+            if(token == null) return BadRequest("Invalid client request token is null");
+            return Ok(token);
+        }
+
+
+        [HttpGet]
+        [Route("revoke")]
+        [Authorize("Bearer")]
+        public IActionResult Revoke([FromBody] TokenVO tokenVo)
+        {
+            var username = User.Identity.Name;
+            var result = _loginBusiness.RevokeToken(username);
+            if (!result) return BadRequest("Invalid client request");
+            return NoContent() ;
         }
     }
 

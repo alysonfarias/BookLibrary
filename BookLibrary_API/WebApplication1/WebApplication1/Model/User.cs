@@ -18,7 +18,7 @@ namespace WebApplication1.Model
         public string FullName { get; set; }
 
         [Column("password")]
-        public string PassWord { get; set; }
+        public string Password { get; set; }
 
         [Column("refresh_token")]
         public string RefreshToken { get; set; }
