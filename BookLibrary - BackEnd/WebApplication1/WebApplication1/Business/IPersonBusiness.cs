@@ -1,4 +1,4 @@
-﻿using System.Collections.Generic;
+using System.Collections.Generic;
 using WebApplication1.Data.VO;
 
 namespace WebApplication1.Business
@@ -8,9 +8,12 @@ namespace WebApplication1.Business
         PersonVO Create(PersonVO person);
         PersonVO Update(PersonVO person);
         PersonVO FindById(long id);
+        List<PersonVO> FindByName(string firstName, string lastName);
+
         void Delete(long id);
         PersonVO Disable(long id);
 
         List<PersonVO> FindAll();
+
     }
 }

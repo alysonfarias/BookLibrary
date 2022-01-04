@@ -1,4 +1,5 @@
-﻿using System;
+using System;
+using System.Collections.Generic;
 using System.Linq;
 using WebApplication1.Model;
 using WebApplication1.Model.Context;
@@ -30,5 +31,24 @@ namespace WebApplication1.Repository
             }
             return user;
         }
+
+    public List<Person> findByName(string firstName, string lastName)
+    {
+      if (!string.IsNullOrEmpty(firstName) && !string.IsNullOrEmpty(lastName))
+      {
+        return _context.People.Where(
+        p => p.FirstName.Contains(firstName)
+        && p.LastName.Contains(lastName)).ToList();
+      }else if (string.IsNullOrEmpty(firstName) && !string.IsNullOrEmpty(lastName))
+      {
+        return _context.People.Where(p => p.LastName.Contains(lastName)).ToList();
+      } else if (!string.IsNullOrEmpty(firstName) && string.IsNullOrEmpty(lastName))
+      {
+        return _context.People.Where(
+        p => p.FirstName.Contains(firstName)).ToList();
+      }
+      return null;
+
     }
+  }
 }

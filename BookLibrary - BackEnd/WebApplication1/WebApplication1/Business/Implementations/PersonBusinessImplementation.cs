@@ -1,4 +1,4 @@
-﻿using System.Collections.Generic;
+using System.Collections.Generic;
 using WebApplication1.Data.Converter.Implementations;
 using WebApplication1.Data.VO;
 using WebApplication1.Model;
@@ -58,6 +58,9 @@ namespace WebApplication1.Business.Implementations
             return _converter.Parse(personEntity);
         }
 
-
-    }
+        public List<PersonVO> FindByName(string firstName, string lastName)
+        {
+          return _converter.Parse(_repository.findByName(firstName, lastName));
+        }
+  }
 }
