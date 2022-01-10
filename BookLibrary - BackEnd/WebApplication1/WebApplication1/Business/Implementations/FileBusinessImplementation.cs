@@ -21,7 +21,8 @@ namespace WebApplication1.Business.Implementations
 
     public byte[] GetFile(string fileName)
     {
-      throw new NotImplementedException();
+      var filePath = _basePath + fileName;
+      return File.ReadAllBytes(filePath);
     }
 
     public async Task<List<FileDetailVO>> SaveFilesToDisk(IList<IFormFile> files)
